@@ -1,147 +1,954 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeTracker - Din arbejdstidsassistent</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TimeTracker Pro – Automatisk tidsregistrering til Windows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<style>
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:   #22c55e;
+  --green-d: #16a34a;
+  --green-g: #4ade80;
+  --navy:    #080c12;
+  --navy2:   #0d1320;
+  --navy3:   #111927;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #e2e8f0;
+  --muted:   #64748b;
+  --font-h:  'Syne', sans-serif;
+  --font-b:  'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: var(--font-b);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Noise texture overlay ────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Header ───────────────────────────────────── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 4rem;
+  background: rgba(8,12,18,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: var(--font-h);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+}
+
+.logo-dot {
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+  50%      { opacity: 0.4; box-shadow: none; }
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+.btn-nav {
+  background: var(--green);
+  color: #fff !important;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 8px;
+  margin-left: 0.5rem;
+  transition: background 0.2s, transform 0.1s !important;
+}
+.btn-nav:hover { background: var(--green-d) !important; transform: translateY(-1px); }
+
+/* ── Hero ─────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%);
+  top: 20%; left: 10%;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  color: var(--green-g);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-badge i { font-size: 0.7rem; }
+
+h1 {
+  font-family: var(--font-h);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+  max-width: 900px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+h1 em {
+  font-style: normal;
+  color: var(--green);
+  position: relative;
+}
+h1 em::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), transparent);
+  border-radius: 2px;
+}
+
+.hero-sub {
+  font-size: 1.2rem;
+  color: var(--muted);
+  max-width: 540px;
+  margin: 1.8rem auto 0;
+  font-weight: 400;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(34,197,94,0.3);
+}
+.btn-primary:hover {
+  background: var(--green-d);
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(34,197,94,0.45);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.btn-secondary:hover {
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 4rem;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: var(--font-h);
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+.stat-num span { color: var(--green); }
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── App mockup strip ─────────────────────────── */
+.mockup-strip {
+  background: var(--navy2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 3rem 4rem;
+  overflow: hidden;
+  position: relative;
+}
+.mockup-inner {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  max-width: 980px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+}
+.mockup-bar {
+  background: #0d1320;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.r { background: #ff5f57; }
+.dot.y { background: #febc2e; }
+.dot.g { background: #28c840; }
+.mockup-title {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 500;
+}
+.mockup-content {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 0.4rem;
+}
+.mock-row {
+  display: contents;
+}
+.mock-cell {
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #94a3b8;
+}
+.mock-cell.act { color: #e2e8f0; }
+.mock-cell.green { color: var(--green); font-weight: 600; }
+.mock-cell.blue  { color: #60a5fa; }
+.mock-cell.purp  { color: #a78bfa; }
+.mock-cell.amber { color: #fbbf24; }
+.mock-cell.head  {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid rgba(255,255,255,0.06);
+  font-weight: 600;
+}
+.mock-timer {
+  font-family: var(--font-h);
+  font-size: 2.5rem;
+  color: var(--green);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  text-shadow: 0 0 30px rgba(34,197,94,0.4);
+}
+
+/* ── Section base ─────────────────────────────── */
+section { padding: 7rem 2rem; }
+.container { max-width: 1080px; margin: 0 auto; }
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: var(--font-h);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.section-sub {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 520px;
+}
+
+/* ── Features ─────────────────────────────────── */
+#features { background: var(--navy2); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+.feature-card {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34,197,94,0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover {
+  border-color: rgba(34,197,94,0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(34,197,94,0.1);
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 44px; height: 44px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--green);
+  margin-bottom: 1.2rem;
+}
+.feature-card h3 {
+  font-family: var(--font-h);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.01em;
+}
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── Testimonials ─────────────────────────────── */
+#testimonials { background: var(--navy); }
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+.testimonial {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+}
+.testimonial::before {
+  content: '"';
+  font-family: var(--font-h);
+  font-size: 4rem;
+  color: var(--green);
+  opacity: 0.2;
+  position: absolute;
+  top: 1rem; left: 1.5rem;
+  line-height: 1;
+}
+.testimonial p {
+  font-size: 1rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 1.2rem;
+  padding-top: 1.5rem;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.author-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--green);
+}
+.author-name { font-weight: 600; font-size: 0.9rem; color: #fff; }
+.author-role { font-size: 0.8rem; color: var(--muted); }
+
+/* ── Pricing ──────────────────────────────────── */
+#pricing { background: var(--navy2); }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 4rem;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.price-card {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.price-card.featured {
+  border-color: rgba(34,197,94,0.35);
+  box-shadow: 0 0 60px rgba(34,197,94,0.1), inset 0 1px 0 rgba(34,197,94,0.2);
+}
+.price-card.featured:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 80px rgba(34,197,94,0.18);
+}
+.price-badge {
+  display: inline-block;
+  background: rgba(34,197,94,0.15);
+  color: var(--green-g);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+.price-card h3 {
+  font-family: var(--font-h);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.price-amount {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.3rem;
+  margin: 1.5rem 0;
+}
+.price-num {
+  font-family: var(--font-h);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.price-num.green { color: var(--green); }
+.price-unit { color: var(--muted); font-size: 0.9rem; padding-bottom: 0.5rem; }
+.price-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+.price-features { list-style: none; margin-bottom: 2.5rem; }
+.price-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.price-features li:last-child { border-bottom: none; }
+.price-features li i { color: var(--green); font-size: 0.75rem; }
+.price-features li.muted i { color: var(--muted); }
+.price-features li.muted { color: #475569; }
+
+/* ── Download ─────────────────────────────────── */
+#download {
+  background: var(--navy);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#download::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(34,197,94,0.08), transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.download-box {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 4rem 3rem;
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+}
+.download-box .section-title { margin-bottom: 0.8rem; }
+.download-box p { color: var(--muted); margin-bottom: 2.5rem; }
+.os-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+}
+
+/* ── Contact ──────────────────────────────────── */
+#contact { background: var(--navy2); text-align: center; padding: 5rem 2rem; }
+#contact p { color: var(--muted); margin-top: 1rem; }
+#contact a { color: var(--green); text-decoration: none; font-weight: 500; }
+#contact a:hover { text-decoration: underline; }
+
+/* ── Footer ───────────────────────────────────── */
+footer {
+  background: var(--navy);
+  border-top: 1px solid var(--border);
+  padding: 3rem 4rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-logo {
+  font-family: var(--font-h);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.footer-copy { font-size: 0.8rem; color: var(--muted); }
+.footer-links { display: flex; gap: 1.2rem; }
+.footer-links a {
+  color: var(--muted);
+  font-size: 1.1rem;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.footer-links a:hover { color: var(--green); }
+
+/* ── Animations ───────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Mobile ───────────────────────────────────── */
+.mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; }
+
+@media (max-width: 768px) {
+  header { padding: 1rem 1.5rem; }
+  nav { display: none; }
+  .mobile-toggle { display: block; }
+  .hero { padding: 7rem 1.5rem 5rem; }
+  .hero-stats { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .mockup-strip { padding: 2rem 1rem; }
+  section { padding: 5rem 1.5rem; }
+  footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
 <body>
-    <header>
-        <div class="logo">⏱️ <span>TimeTracker</span></div>
-        <nav id="navbar">
-            <a href="#features">Funktioner</a>
-            <a href="#pricing">Priser</a>
-            <a href="#download">Download</a>
-            <a href="#contact">Kontakt</a>
-            <button id="theme-toggle" title="Skift tema"><i class="fas fa-moon"></i></button>
-        </nav>
-        <div class="mobile-nav-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></div>
-    </header>
 
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <h1>Track din arbejdstid <span class="highlight">automatisk</span></h1>
-        <p>TimeTracker hjælper dig med at holde styr på arbejdstid, opgaver og fakturering – helt automatisk.</p>
-        <a class="cta-button pulse" href="#download">📥 Prøv gratis i 14 dage</a>
-        <div class="hero-image">
-            <img src="https://img.icons8.com/color/96/time-machine.png" alt="Time illustration">
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    TimeTracker Pro
+  </div>
+  <nav id="nav">
+    <a href="#features">Funktioner</a>
+    <a href="#pricing">Priser</a>
+    <a href="#testimonials">Anmeldelser</a>
+    <a href="#contact">Kontakt</a>
+    <a href="#download" class="btn-nav">Download</a>
+  </nav>
+  <button class="mobile-toggle" onclick="document.getElementById('nav').style.display=document.getElementById('nav').style.display==='flex'?'none':'flex'">
+    <i class="fas fa-bars"></i>
+  </button>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-badge">
+    <i class="fas fa-circle"></i>
+    Ny version 2.0 ude nu
+  </div>
+
+  <h1>Din arbejdstid<br>tracker sig <em>selv</em></h1>
+
+  <p class="hero-sub">TimeTracker Pro registrerer automatisk hvad du bruger din tid på — og laver fakturaer og rapporter på sekunder.</p>
+
+  <div class="hero-btns">
+    <a href="#download" class="btn-primary">
+      <i class="fas fa-download"></i>
+      Prøv gratis i 14 dage
+    </a>
+    <a href="#features" class="btn-secondary">
+      <i class="fas fa-play"></i>
+      Se funktioner
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Automatisk</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span>0</span> klik</div>
+      <div class="stat-label">For at starte</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">14<span>d</span></div>
+      <div class="stat-label">Gratis prøve</div>
+    </div>
+  </div>
+</section>
+
+<!-- APP MOCKUP -->
+<div class="mockup-strip">
+  <div class="mockup-inner">
+    <div class="mockup-bar">
+      <div class="dot r"></div>
+      <div class="dot y"></div>
+      <div class="dot g"></div>
+      <div class="mockup-title">TimeTracker Pro</div>
+    </div>
+    <div class="mock-timer">02:47:33</div>
+    <div class="mockup-content">
+      <div class="mock-cell head">AKTIVITET</div>
+      <div class="mock-cell head">TID</div>
+      <div class="mock-cell head">KATEGORI</div>
+      <div class="mock-cell head">ANDEL</div>
+
+      <div class="mock-cell act">Microsoft Excel – Budget Q2.xlsx</div>
+      <div class="mock-cell">01:12:04</div>
+      <div class="mock-cell green">Excel</div>
+      <div class="mock-cell">43.2%</div>
+
+      <div class="mock-cell act">Claude – Anthropic</div>
+      <div class="mock-cell">00:47:18</div>
+      <div class="mock-cell purp">AI</div>
+      <div class="mock-cell">28.3%</div>
+
+      <div class="mock-cell act">Outlook – Indbakke</div>
+      <div class="mock-cell">00:31:45</div>
+      <div class="mock-cell blue">Mail</div>
+      <div class="mock-cell">19.0%</div>
+
+      <div class="mock-cell act">Chrome – GitHub</div>
+      <div class="mock-cell">00:16:26</div>
+      <div class="mock-cell green">Browser</div>
+      <div class="mock-cell">9.5%</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <p class="section-label reveal">Funktioner</p>
+    <h2 class="section-title reveal">Alt du har brug for.<br>Intet du ikke har.</h2>
+    <p class="section-sub reveal">Bygget til professionelle der ikke vil bruge tid på at registrere tid.</p>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+        <h3>Automatisk tracking</h3>
+        <p>Registrerer automatisk hvilket program og hvilken fil du arbejder i — uden du løfter en finger.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-brain"></i></div>
+        <h3>Intelligente kategorier</h3>
+        <p>AI-drevne regler sorterer automatisk din tid i kategorier som Mail, Excel, Browser og AI-værktøjer.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+        <h3>Faktura på ét klik</h3>
+        <p>Vælg periode og kunde — programmet beregner timer, runder op til kvarter og genererer en PDF-faktura.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+        <h3>Rapporter & dashboard</h3>
+        <p>Se fordelingen af din tid som cirkeldiagram eller eksportér til Excel og PDF med det samme.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-database"></i></div>
+        <h3>Lokal database</h3>
+        <p>Al data gemmes lokalt på din maskine i en SQLite-database. Ingen sky, ingen abonnement på data.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Licensbeskyttet</h3>
+        <p>Hardware-bundet licens sikrer at kun du kan bruge din kopi. Fuld kontrol, ingen lækage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <p class="section-label reveal">Anmeldelser</p>
+    <h2 class="section-title reveal">Hvad siger brugerne?</h2>
+
+    <div class="testimonials-grid">
+      <div class="testimonial reveal">
+        <p>Super nemt! Jeg glemmer aldrig at registrere tid længere. Fakturaen er klar på under et minut.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div>
+            <div class="author-name">Mette H.</div>
+            <div class="author-role">Selvstændig konsulent</div>
+          </div>
         </div>
-    </section>
-
-    <section id="features" class="section">
-        <h2>🔧 Funktioner</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <i class="fas fa-robot"></i>
-                <h3>Automatisk tracking</h3>
-                <p>Registrér programmer, filer og aktiviteter helt uden manuelt arbejde.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-chart-pie"></i>
-                <h3>Rapporter & eksport</h3>
-                <p>Eksportér arbejdstider til PDF eller Excel med ét klik.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-lightbulb"></i>
-                <h3>Intelligente kategorier</h3>
-                <p>Regler og AI der hjælper dig med at sortere arbejdet smart.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-lock"></i>
-                <h3>Sikkerhed & licens</h3>
-                <p>Al data gemt lokalt – med licenssystem for ekstra sikkerhed.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-moon"></i>
-                <h3>Mørkt tema</h3>
-                <p>Moderne og brugervenligt mørkt tema!</p>
-            </div>
+      </div>
+      <div class="testimonial reveal">
+        <p>TimeTracker har sparet mig timevis af manuel registrering. Rapporterne ser professionelle ud.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">T</div>
+          <div>
+            <div class="author-name">Thomas K.</div>
+            <div class="author-role">Freelance udvikler</div>
+          </div>
         </div>
-    </section>
-
-    <section id="testimonials" class="section dark">
-        <h2>🤩 Hvad siger brugerne?</h2>
-        <div class="testimonials">
-            <div class="testimonial">
-                <p>“Super nemt! Jeg glemmer aldrig at registrere tid længere.”</p>
-                <span>- Mette, konsulent</span>
-            </div>
-            <div class="testimonial">
-                <p>“TimeTracker har sparet mig timevis af manuel tastearbejde.”</p>
-                <span>- Thomas, selvstændig</span>
-            </div>
-            <div class="testimonial">
-                <p>“Elsker PDF-eksport og at alt bare kører af sig selv.”</p>
-                <span>- Pernille, revisor</span>
-            </div>
+      </div>
+      <div class="testimonial reveal">
+        <p>Elsker at alt bare kører automatisk. Jeg åbner programmet om morgenen og lukker det om aftenen.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">P</div>
+          <div>
+            <div class="author-name">Pernille S.</div>
+            <div class="author-role">Revisor</div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section id="pricing" class="section">
-        <h2>💰 Priser</h2>
-        <div class="pricing-cards">
-            <div class="price-box highlight">
-                <h3><i class="fas fa-gift"></i> Gratis prøveperiode</h3>
-                <p>Fuld funktionalitet i 14 dage – uden betalingskort.</p>
-                <p><strong>0 kr.</strong></p>
-            </div>
-            <div class="price-box">
-                <h3><i class="fas fa-star"></i> Pro-licens</h3>
-                <p>For professionelle og virksomheder</p>
-                <p><strong>100 kr./md</strong></p>
-            </div>
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container" style="text-align:center">
+    <p class="section-label reveal">Priser</p>
+    <h2 class="section-title reveal">Simpel, ærlig prissætning</h2>
+    <p class="section-sub reveal" style="margin:0 auto 0">Ingen skjulte gebyrer. Ingen binding.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="price-badge">Gratis prøve</div>
+        <h3>Trial</h3>
+        <div class="price-amount">
+          <div class="price-num green">0</div>
+          <div class="price-unit">kr. / 14 dage</div>
         </div>
-    </section>
+        <p class="price-desc">Fuld adgang til alle funktioner i 14 dage. Ingen betalingskort krævet.</p>
+        <ul class="price-features">
+          <li><i class="fas fa-check"></i> Alle funktioner inkl.</li>
+          <li><i class="fas fa-check"></i> PDF-faktura & rapporter</li>
+          <li><i class="fas fa-check"></i> Ingen kreditkort</li>
+        </ul>
+        <a href="#download" class="btn-secondary" style="width:100%;justify-content:center;display:flex">Start gratis</a>
+      </div>
 
-    <section id="download" class="section dark">
-        <h2>📥 Download</h2>
-        <p>Installer TimeTracker til Windows:</p>
-        <a class="cta-button pulse" href="https://github.com/pikansj0s/TimeTracker/releases/latest/download/TimeTrackerSetup.exe">
-    🔽 Download TimeTracker til Windows
-</a>
-    </section>
-
-    <section id="contact" class="section">
-        <h2>📧 Kontakt</h2>
-        <p>Har du spørgsmål? Skriv til os på <a href="mailto:support@timetracker.dk">support@timetracker.dk</a></p>
-    </section>
-
-    <footer>
-        <div class="footer-links">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-            <a href="#"><i class="fab fa-x-twitter"></i></a>
-            <a href="mailto:support@timetracker.dk"><i class="fas fa-envelope"></i></a>
+      <div class="price-card featured reveal">
+        <div class="price-badge">Mest populær</div>
+        <h3>Pro-licens</h3>
+        <div class="price-amount">
+          <div class="price-num">129</div>
+          <div class="price-unit">kr. / md.</div>
         </div>
-        <div class="footer-text">
-            © 2025 TimeTracker · Alle rettigheder forbeholdes · Copyright
-        </div>
-        <button id="scroll-top" title="Til toppen"><i class="fas fa-arrow-up"></i></button>
-    </footer>
+        <p class="price-desc">Alt hvad en professionel har brug for. Løbende opdateringer inkluderet.</p>
+        <ul class="price-features">
+          <li><i class="fas fa-check"></i> Fuld adgang for altid</li>
+          <li><i class="fas fa-check"></i> PDF-faktura & eksport</li>
+          <li><i class="fas fa-check"></i> Automatiske opdateringer</li>
+          <li><i class="fas fa-check"></i> Email-support</li>
+        </ul>
+        <a href="mailto:support@timetracker.dk" class="btn-primary" style="width:100%;justify-content:center">Køb licens</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-    // Start altid på mørkt tema!
-    document.body.classList.add('dark');
-    document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+<!-- DOWNLOAD -->
+<section id="download">
+  <div class="container">
+    <div class="download-box reveal">
+      <h2 class="section-title">Klar til at starte?</h2>
+      <p>Download og installer TimeTracker Pro til Windows. Kørende på under 2 minutter.</p>
+      <div class="os-badge"><i class="fab fa-windows"></i> Windows 10 / 11</div><br>
+      <a href="https://github.com/pikansj0s/TimeTracker/releases/latest/download/TimeTrackerSetup.exe" class="btn-primary">
+        <i class="fas fa-download"></i>
+        Download TimeTracker Pro
+      </a>
+    </div>
+  </div>
+</section>
 
-    // Mobile menu toggle
-    document.getElementById('mobile-toggle').onclick = function() {
-        document.getElementById('navbar').classList.toggle('open');
-    };
-    // Scroll to top
-    document.getElementById('scroll-top').onclick = function() {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    };
-    // Dark mode toggle
-    document.getElementById('theme-toggle').onclick = function() {
-        document.body.classList.toggle('dark');
-        this.innerHTML = document.body.classList.contains('dark')
-            ? '<i class="fas fa-sun"></i>'
-            : '<i class="fas fa-moon"></i>';
-    };
-    </script>
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label reveal">Support</p>
+    <h2 class="section-title reveal">Har du spørgsmål?</h2>
+    <p>Skriv til os på <a href="mailto:support@timetracker.dk">support@timetracker.dk</a> — vi svarer inden for 24 timer.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="logo-dot"></div>
+    TimeTracker Pro
+  </div>
+  <div class="footer-copy">© 2025 TimeTracker Pro · Alle rettigheder forbeholdes</div>
+  <div class="footer-links">
+    <a href="#"><i class="fab fa-facebook"></i></a>
+    <a href="#"><i class="fab fa-linkedin"></i></a>
+    <a href="mailto:support@timetracker.dk"><i class="fas fa-envelope"></i></a>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Animated timer in mockup
+const timer = document.querySelector('.mock-timer');
+let s = 9 * 60 + 33 + 2 * 3600 + 47 * 60;
+setInterval(() => {
+  s++;
+  const h = String(Math.floor(s/3600)).padStart(2,'0');
+  const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const sec = String(s%60).padStart(2,'0');
+  timer.textContent = `${h}:${m}:${sec}`;
+}, 1000);
+</script>
 </body>
 </html>
