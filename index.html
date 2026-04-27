@@ -10,7 +10,6 @@
 <style>
 /* ── Reset & Base ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --green:   #22c55e;
   --green-d: #16a34a;
@@ -24,9 +23,7 @@
   --font-h:  'Syne', sans-serif;
   --font-b:  'DM Sans', sans-serif;
 }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--navy);
   color: var(--text);
@@ -35,7 +32,6 @@ body {
   line-height: 1.7;
   overflow-x: hidden;
 }
-
 /* ── Noise texture overlay ────────────────────── */
 body::before {
   content: '';
@@ -46,7 +42,6 @@ body::before {
   pointer-events: none;
   z-index: 9999;
 }
-
 /* ── Header ───────────────────────────────────── */
 header {
   position: fixed;
@@ -60,7 +55,6 @@ header {
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
-
 .logo {
   font-family: var(--font-h);
   font-size: 1.3rem;
@@ -71,7 +65,6 @@ header {
   gap: 0.5rem;
   color: #fff;
 }
-
 .logo-dot {
   width: 8px; height: 8px;
   background: var(--green);
@@ -82,7 +75,6 @@ header {
   0%,100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
   50%      { opacity: 0.4; box-shadow: none; }
 }
-
 nav {
   display: flex;
   align-items: center;
@@ -98,7 +90,6 @@ nav a {
   transition: color 0.2s, background 0.2s;
 }
 nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
-
 .btn-nav {
   background: var(--green);
   color: #fff !important;
@@ -109,7 +100,6 @@ nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
   transition: background 0.2s, transform 0.1s !important;
 }
 .btn-nav:hover { background: var(--green-d) !important; transform: translateY(-1px); }
-
 /* ── Hero ─────────────────────────────────────── */
 .hero {
   min-height: 100vh;
@@ -122,7 +112,6 @@ nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
   position: relative;
   overflow: hidden;
 }
-
 .hero-glow {
   position: absolute;
   width: 800px; height: 800px;
@@ -138,7 +127,6 @@ nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
   top: 20%; left: 10%;
   pointer-events: none;
 }
-
 .hero-badge {
   display: inline-flex;
   align-items: center;
@@ -156,7 +144,6 @@ nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
   animation: fadeUp 0.6s ease both;
 }
 .hero-badge i { font-size: 0.7rem; }
-
 h1 {
   font-family: var(--font-h);
   font-size: clamp(2.2rem, 4.5vw, 4rem);
@@ -180,7 +167,6 @@ h1 em::after {
   background: linear-gradient(90deg, var(--green), transparent);
   border-radius: 2px;
 }
-
 .hero-sub {
   font-size: 1.2rem;
   color: var(--muted);
@@ -189,7 +175,6 @@ h1 em::after {
   font-weight: 400;
   animation: fadeUp 0.6s 0.2s ease both;
 }
-
 .hero-btns {
   display: flex;
   gap: 1rem;
@@ -198,7 +183,6 @@ h1 em::after {
   flex-wrap: wrap;
   animation: fadeUp 0.6s 0.3s ease both;
 }
-
 .btn-primary {
   background: var(--green);
   color: #fff;
@@ -218,7 +202,6 @@ h1 em::after {
   transform: translateY(-2px);
   box-shadow: 0 0 40px rgba(34,197,94,0.45);
 }
-
 .btn-secondary {
   background: transparent;
   color: var(--text);
@@ -238,7 +221,6 @@ h1 em::after {
   background: rgba(255,255,255,0.05);
   color: #fff;
 }
-
 .hero-stats {
   display: flex;
   gap: 3rem;
@@ -261,7 +243,6 @@ h1 em::after {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
-
 /* ── App mockup strip ─────────────────────────── */
 .mockup-strip {
   background: var(--navy2);
@@ -339,7 +320,6 @@ h1 em::after {
   border-bottom: 1px solid var(--border);
   text-shadow: 0 0 30px rgba(34,197,94,0.4);
 }
-
 /* ── Section base ─────────────────────────────── */
 section { padding: 7rem 2rem; }
 .container { max-width: 1080px; margin: 0 auto; }
@@ -365,7 +345,6 @@ section { padding: 7rem 2rem; }
   color: var(--muted);
   max-width: 520px;
 }
-
 /* ── Features ─────────────────────────────────── */
 #features { background: var(--navy2); }
 .features-grid {
@@ -398,7 +377,6 @@ section { padding: 7rem 2rem; }
   box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(34,197,94,0.1);
 }
 .feature-card:hover::before { opacity: 1; }
-
 .feature-icon {
   width: 44px; height: 44px;
   background: rgba(34,197,94,0.1);
@@ -424,7 +402,6 @@ section { padding: 7rem 2rem; }
   color: var(--muted);
   line-height: 1.65;
 }
-
 /* ── Testimonials ─────────────────────────────── */
 #testimonials { background: var(--navy); }
 .testimonials-grid {
@@ -477,7 +454,6 @@ section { padding: 7rem 2rem; }
 }
 .author-name { font-weight: 600; font-size: 0.9rem; color: #fff; }
 .author-role { font-size: 0.8rem; color: var(--muted); }
-
 /* ── Pricing ──────────────────────────────────── */
 #pricing { background: var(--navy2); }
 .pricing-grid {
@@ -555,7 +531,6 @@ section { padding: 7rem 2rem; }
 .price-features li i { color: var(--green); font-size: 0.75rem; }
 .price-features li.muted i { color: var(--muted); }
 .price-features li.muted { color: #475569; }
-
 /* ── Download ─────────────────────────────────── */
 #download {
   background: var(--navy);
@@ -595,13 +570,11 @@ section { padding: 7rem 2rem; }
   border-radius: 6px;
   margin-bottom: 2rem;
 }
-
 /* ── Contact ──────────────────────────────────── */
 #contact { background: var(--navy2); text-align: center; padding: 5rem 2rem; }
 #contact p { color: var(--muted); margin-top: 1rem; }
 #contact a { color: var(--green); text-decoration: none; font-weight: 500; }
 #contact a:hover { text-decoration: underline; }
-
 /* ── Footer ───────────────────────────────────── */
 footer {
   background: var(--navy);
@@ -631,13 +604,11 @@ footer {
   text-decoration: none;
 }
 .footer-links a:hover { color: var(--green); }
-
 /* ── Animations ───────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -647,10 +618,8 @@ footer {
   opacity: 1;
   transform: none;
 }
-
 /* ── Mobile ───────────────────────────────────── */
 .mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; }
-
 @media (max-width: 768px) {
   header { padding: 1rem 1.5rem; }
   nav { display: none; }
@@ -664,7 +633,6 @@ footer {
 </style>
 </head>
 <body>
-
 <!-- HEADER -->
 <header>
   <div class="logo">
@@ -682,21 +650,16 @@ footer {
     <i class="fas fa-bars"></i>
   </button>
 </header>
-
 <!-- HERO -->
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
-
   <div class="hero-badge">
     <i class="fas fa-circle"></i>
-    Ny version 2.0 ude nu
+    Ny version 4.0 ude nu
   </div>
-
   <h1>Din arbejdstid tracker sig <em>selv</em></h1>
-
-  <p class="hero-sub">TimeTracker Pro registrerer automatisk hvad du bruger din tid på — og laver fakturaer og rapporter på sekunder.</p>
-
+  <p class="hero-sub">TimeTracker Pro registrerer automatisk hvad du bruger din tid på — projekter, mapper, dokumenter — og leverer rapporter på sekunder.</p>
   <div class="hero-btns">
     <a href="#download" class="btn-primary">
       <i class="fas fa-download"></i>
@@ -707,7 +670,6 @@ footer {
       Se funktioner
     </a>
   </div>
-
   <div class="hero-stats">
     <div class="stat">
       <div class="stat-num">100<span>%</span></div>
@@ -723,7 +685,6 @@ footer {
     </div>
   </div>
 </section>
-
 <!-- APP MOCKUP -->
 <div class="mockup-strip">
   <div class="mockup-inner">
@@ -739,22 +700,18 @@ footer {
       <div class="mock-cell head">TID</div>
       <div class="mock-cell head">KATEGORI</div>
       <div class="mock-cell head">ANDEL</div>
-
       <div class="mock-cell act">Microsoft Excel – Budget Q2.xlsx</div>
       <div class="mock-cell">01:12:04</div>
       <div class="mock-cell green">Excel</div>
       <div class="mock-cell">43.2%</div>
-
       <div class="mock-cell act">Claude – Anthropic</div>
       <div class="mock-cell">00:47:18</div>
       <div class="mock-cell purp">AI</div>
       <div class="mock-cell">28.3%</div>
-
       <div class="mock-cell act">Outlook – Indbakke</div>
       <div class="mock-cell">00:31:45</div>
       <div class="mock-cell blue">Mail</div>
       <div class="mock-cell">19.0%</div>
-
       <div class="mock-cell act">Chrome – GitHub</div>
       <div class="mock-cell">00:16:26</div>
       <div class="mock-cell green">Browser</div>
@@ -762,58 +719,54 @@ footer {
     </div>
   </div>
 </div>
-
 <!-- FEATURES -->
 <section id="features">
   <div class="container">
     <p class="section-label reveal">Funktioner</p>
     <h2 class="section-title reveal">Alt du har brug for.<br>Intet du ikke har.</h2>
     <p class="section-sub reveal">Bygget til professionelle der ikke vil bruge tid på at registrere tid.</p>
-
     <div class="features-grid">
       <div class="feature-card reveal">
         <div class="feature-icon"><i class="fas fa-robot"></i></div>
         <h3>Automatisk tracking</h3>
-        <p>Registrerer automatisk hvilket program og hvilken fil du arbejder i — uden du løfter en finger.</p>
+        <p>Registrerer automatisk hvilket program og hvilken fil du arbejder i — uden du løfter en finger. Følger dig på tværs af tabs i Chrome, Edge, Avast og andre browsere.</p>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-icon"><i class="fas fa-brain"></i></div>
-        <h3>Intelligente kategorier</h3>
-        <p>AI-drevne regler sorterer automatisk din tid i kategorier som Mail, Excel, Browser og AI-værktøjer.</p>
+        <div class="feature-icon"><i class="fas fa-folder-tree"></i></div>
+        <h3>Mappetid &amp; projekt-budgetter</h3>
+        <p>Tracker hvor lang tid du bruger på filer i specifikke kunde-mapper. Sæt timer + pris pr. projekt og få besked ved 25 / 50 / 75 / 100% af budgettet.</p>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-        <h3>Faktura på ét klik</h3>
-        <p>Vælg periode og kunde — programmet beregner timer, runder op til kvarter og genererer en PDF-faktura.</p>
+        <div class="feature-icon"><i class="fas fa-check-square"></i></div>
+        <h3>TO-DO liste</h3>
+        <p>Indbygget opgaveliste i sidebaren. Checkboxe til markér færdig, persistent på tværs af sessioner, ryd færdige med ét klik.</p>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
-        <h3>Rapporter & dashboard</h3>
-        <p>Se fordelingen af din tid som cirkeldiagram eller eksportér til Excel og PDF med det samme.</p>
+        <div class="feature-icon"><i class="fas fa-search"></i></div>
+        <h3>CVR-søgning</h3>
+        <p>Slå danske firmaer op via CVR-nummer eller navn direkte i appen. Adresse, branche, kontaktinfo — kopier formateret blok med ét klik.</p>
       </div>
       <div class="feature-card reveal">
-        <div class="feature-icon"><i class="fas fa-database"></i></div>
-        <h3>Lokal database</h3>
-        <p>Al data gemmes lokalt på din maskine i en SQLite-database. Ingen sky, ingen abonnement på data.</p>
+        <div class="feature-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+        <h3>Cloud-backup</h3>
+        <p>Auto-backup til OneDrive, Google Drive eller dit eget netværksdrev. Op til 300 backups med FIFO-rotation — gendan på sekunder efter harddisk-fejl eller ny computer.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-        <h3>Licensbeskyttet</h3>
-        <p>Hardware-bundet licens sikrer at kun du kan bruge din kopi. Fuld kontrol, ingen lækage.</p>
+        <h3>Lokal database &amp; licens</h3>
+        <p>Al data gemmes lokalt på din maskine i en SQLite-database — ingen sky-tvang. Hardware-bundet licens sikrer at kun du kan bruge din kopi.</p>
       </div>
     </div>
   </div>
 </section>
-
 <!-- TESTIMONIALS -->
 <section id="testimonials">
   <div class="container">
     <p class="section-label reveal">Anmeldelser</p>
     <h2 class="section-title reveal">Hvad siger brugerne?</h2>
-
     <div class="testimonials-grid">
       <div class="testimonial reveal">
-        <p>Super nemt! Jeg glemmer aldrig at registrere tid længere. Fakturaen er klar på under et minut.</p>
+        <p>Super nemt! Jeg glemmer aldrig at registrere tid længere. Projekt-budgetterne giver overblik på sekunder.</p>
         <div class="testimonial-author">
           <div class="author-avatar">M</div>
           <div>
@@ -823,7 +776,7 @@ footer {
         </div>
       </div>
       <div class="testimonial reveal">
-        <p>TimeTracker har sparet mig timevis af manuel registrering. Rapporterne ser professionelle ud.</p>
+        <p>TimeTracker har sparet mig timevis af manuel registrering. Mappetid-funktionen viser præcis hvad jeg har brugt på hver kunde.</p>
         <div class="testimonial-author">
           <div class="author-avatar">T</div>
           <div>
@@ -833,7 +786,7 @@ footer {
         </div>
       </div>
       <div class="testimonial reveal">
-        <p>Elsker at alt bare kører automatisk. Jeg åbner programmet om morgenen og lukker det om aftenen.</p>
+        <p>Elsker at alt bare kører automatisk. Jeg åbner programmet om morgenen og lukker det om aftenen — backup'en til OneDrive sker af sig selv.</p>
         <div class="testimonial-author">
           <div class="author-avatar">P</div>
           <div>
@@ -845,14 +798,12 @@ footer {
     </div>
   </div>
 </section>
-
 <!-- PRICING -->
 <section id="pricing">
   <div class="container" style="text-align:center">
     <p class="section-label reveal">Priser</p>
     <h2 class="section-title reveal">Simpel, ærlig prissætning</h2>
     <p class="section-sub reveal" style="margin:0 auto 0">Ingen skjulte gebyrer. Ingen binding.</p>
-
     <div class="pricing-grid">
       <div class="price-card reveal">
         <div class="price-badge">Gratis prøve</div>
@@ -864,12 +815,12 @@ footer {
         <p class="price-desc">Fuld adgang til alle funktioner i 14 dage. Ingen betalingskort krævet.</p>
         <ul class="price-features">
           <li><i class="fas fa-check"></i> Alle funktioner inkl.</li>
-          <li><i class="fas fa-check"></i> PDF-faktura & rapporter</li>
+          <li><i class="fas fa-check"></i> Mappetid &amp; projekt-budgetter</li>
+          <li><i class="fas fa-check"></i> Cloud-backup</li>
           <li><i class="fas fa-check"></i> Ingen kreditkort</li>
         </ul>
         <a href="#download" class="btn-secondary" style="width:100%;justify-content:center;display:flex">Start gratis</a>
       </div>
-
       <div class="price-card featured reveal">
         <div class="price-badge">Mest populær</div>
         <h3>Pro-licens</h3>
@@ -880,7 +831,8 @@ footer {
         <p class="price-desc">Alt hvad en professionel har brug for. Løbende opdateringer inkluderet.</p>
         <ul class="price-features">
           <li><i class="fas fa-check"></i> Fuld adgang for altid</li>
-          <li><i class="fas fa-check"></i> PDF-faktura & eksport</li>
+          <li><i class="fas fa-check"></i> Mappetid &amp; projekt-budgetter</li>
+          <li><i class="fas fa-check"></i> Cloud-backup &amp; restore</li>
           <li><i class="fas fa-check"></i> Automatiske opdateringer</li>
           <li><i class="fas fa-check"></i> Email-support</li>
         </ul>
@@ -889,22 +841,20 @@ footer {
     </div>
   </div>
 </section>
-
 <!-- DOWNLOAD -->
 <section id="download">
   <div class="container">
     <div class="download-box reveal">
       <h2 class="section-title">Klar til at starte?</h2>
-      <p>Download og installer TimeTracker Pro til Windows. Kørende på under 2 minutter.</p>
+      <p>Download og installer TimeTracker Pro v4.0 til Windows. Kørende på under 2 minutter.</p>
       <div class="os-badge"><i class="fab fa-windows"></i> Windows 10 / 11</div><br>
-      <a href="https://github.com/pikansj0s/TimeTracker/releases/latest/download/TimeTrackerSetup.exe" class="btn-primary">
+      <a href="https://github.com/pikansj0s/TimeTracker/releases/latest/download/TimeTrackerProSetup_v4.exe" class="btn-primary">
         <i class="fas fa-download"></i>
         Download TimeTracker Pro
       </a>
     </div>
   </div>
 </section>
-
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
@@ -913,21 +863,19 @@ footer {
     <p>Skriv til os på <a href="mailto:support@timetracker.dk">support@timetracker.dk</a> — vi svarer inden for 24 timer.</p>
   </div>
 </section>
-
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
     <div class="logo-dot"></div>
     TimeTracker Pro
   </div>
-  <div class="footer-copy">© 2025 TimeTracker Pro · Alle rettigheder forbeholdes</div>
+  <div class="footer-copy">© 2026 TimeTracker Pro · Alle rettigheder forbeholdes</div>
   <div class="footer-links">
     <a href="#"><i class="fab fa-facebook"></i></a>
     <a href="#"><i class="fab fa-linkedin"></i></a>
     <a href="mailto:support@timetracker.dk"><i class="fas fa-envelope"></i></a>
   </div>
 </footer>
-
 <script>
 // Scroll reveal
 const observer = new IntersectionObserver((entries) => {
@@ -938,7 +886,6 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
 // Animated timer in mockup
 const timer = document.querySelector('.mock-timer');
 let s = 9 * 60 + 33 + 2 * 3600 + 47 * 60;
