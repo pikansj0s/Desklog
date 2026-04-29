@@ -245,8 +245,46 @@ footer{background:var(--black);border-top:1px solid rgba(255,255,255,.06);paddin
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
 .reveal.visible{opacity:1;transform:none}
 
+/* ── Modal — buy license form ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(10,10,8,.78);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:1.5rem;animation:fadeIn .25s ease}
+.modal-backdrop.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--card);border-radius:18px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.32);position:relative;animation:slideUp .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.modal-header{padding:1.8rem 2rem 1rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--card);border-radius:18px 18px 0 0;z-index:1}
+.modal-eyebrow{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem}
+.modal-title{font-family:var(--serif);font-size:1.7rem;color:var(--black);line-height:1.2;font-weight:400}
+.modal-close{position:absolute;top:1.2rem;right:1.2rem;width:32px;height:32px;border-radius:8px;background:var(--stone-ll);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--stone);transition:background .15s,color .15s}
+.modal-close:hover{background:var(--border);color:var(--black)}
+.modal-body{padding:1.5rem 2rem 2rem}
+.modal-desc{font-size:.92rem;color:var(--stone);line-height:1.65;margin-bottom:1.5rem}
+.form-row{margin-bottom:1.1rem}
+.form-row.split{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.form-label{display:block;font-family:var(--mono);font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--stone);margin-bottom:.4rem}
+.form-label .req{color:var(--amber)}
+.form-input,.form-textarea,.form-select{width:100%;font-family:var(--sans);font-size:.95rem;color:var(--black);background:var(--warm-white);border:1px solid var(--border);border-radius:8px;padding:.75rem .9rem;transition:border-color .15s,background .15s;line-height:1.4}
+.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(217,119,6,.12)}
+.form-textarea{resize:vertical;min-height:80px;font-family:var(--sans)}
+.form-select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2.5'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.4rem}
+.form-submit{width:100%;background:var(--black);color:var(--off-white);border:none;font-family:var(--mono);font-size:.92rem;font-weight:600;padding:.95rem;border-radius:10px;cursor:pointer;letter-spacing:.04em;transition:background .15s,transform .12s;margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.form-submit:hover:not(:disabled){background:#1c1c19;transform:translateY(-1px)}
+.form-submit:disabled{opacity:.6;cursor:not-allowed}
+.form-status{margin-top:1rem;padding:.85rem 1rem;border-radius:8px;font-family:var(--mono);font-size:.82rem;line-height:1.5;display:none}
+.form-status.show{display:block}
+.form-status.success{background:rgba(34,197,94,.08);color:#15803d;border:1px solid rgba(34,197,94,.2)}
+.form-status.error{background:rgba(239,68,68,.08);color:#b91c1c;border:1px solid rgba(239,68,68,.2)}
+.form-status.error a{color:var(--amber);font-weight:600}
+.form-footer{font-family:var(--mono);font-size:.72rem;color:var(--stone-l);text-align:center;margin-top:1rem;letter-spacing:.03em}
+.spinner{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* ── Mobile ── */
 @media(max-width:900px){
+  .modal{max-width:none;border-radius:14px;max-height:94vh}
+  .modal-header{padding:1.4rem 1.4rem .8rem}
+  .modal-body{padding:1.2rem 1.4rem 1.6rem}
+  .modal-title{font-size:1.4rem}
+  .form-row.split{grid-template-columns:1fr}
   header{padding:1rem 1.5rem}
   nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--warm-white);border-bottom:1px solid var(--border);flex-direction:column;padding:1rem;gap:.3rem;z-index:100}
   nav.open{display:flex}
@@ -617,7 +655,7 @@ footer{background:var(--black);border-top:1px solid rgba(255,255,255,.06);paddin
         <li data-da="PDF, CSV & email-rapporter" data-en="PDF, CSV & email reports">PDF, CSV & email-rapporter</li>
         <li data-da="Prioritets email-support" data-en="Priority email support">Prioritets email-support</li>
       </ul>
-      <a href="mailto:support@desklog.app" class="btn-buy light" data-da="Køb licens →" data-en="Buy license →">Køb licens →</a>
+      <button type="button" class="btn-buy light" onclick="openBuyModal()" data-da="Køb licens →" data-en="Buy license →">Køb licens →</button>
     </div>
   </div>
   <div class="price-guarantee reveal" data-da="30 dages pengene-tilbage-garanti · Øjeblikkelig licenslevering · Forny eller annullér når som helst" data-en="30-day money-back guarantee · Instant license delivery · Cancel anytime">30 dages pengene-tilbage-garanti · Øjeblikkelig licenslevering · Forny eller annullér når som helst</div>
@@ -653,6 +691,76 @@ footer{background:var(--black);border-top:1px solid rgba(255,255,255,.06);paddin
     — <span data-da="vi svarer inden for 24 timer." data-en="we reply within 24 hours.">vi svarer inden for 24 timer.</span>
   </div>
 </section>
+
+<!-- BUY LICENSE MODAL -->
+<div class="modal-backdrop" id="buy-modal" role="dialog" aria-modal="true" aria-labelledby="buy-modal-title">
+  <div class="modal" role="document">
+    <button class="modal-close" type="button" onclick="closeBuyModal()" aria-label="Luk">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-header">
+      <div class="modal-eyebrow" data-da="Pro-licens · 129 kr / md." data-en="Pro license · 129 kr / mo.">Pro-licens · 129 kr / md.</div>
+      <h3 class="modal-title" id="buy-modal-title" data-da="Køb Desklog Pro-licens" data-en="Buy Desklog Pro license">Køb Desklog Pro-licens</h3>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc" data-da="Udfyld formularen, så sender vi licens og faktura til dig inden for 24 timer. Felter med * er påkrævet." data-en="Fill out the form and we'll send your license and invoice within 24 hours. Fields with * are required.">Udfyld formularen, så sender vi licens og faktura til dig inden for 24 timer. Felter med * er påkrævet.</p>
+      <form id="buy-form" novalidate>
+        <!-- Web3Forms config -->
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+        <input type="hidden" name="subject" value="Ny Desklog Pro-licens bestilling">
+        <input type="hidden" name="from_name" value="Desklog hjemmeside">
+        <input type="hidden" name="redirect" value="false">
+        <!-- Honeypot anti-spam -->
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+        <div class="form-row">
+          <label class="form-label" for="f-name" data-da="Navn <span class='req'>*</span>" data-en="Name <span class='req'>*</span>">Navn <span class="req">*</span></label>
+          <input class="form-input" id="f-name" name="name" type="text" required autocomplete="name">
+        </div>
+        <div class="form-row split">
+          <div>
+            <label class="form-label" for="f-email" data-da="Email <span class='req'>*</span>" data-en="Email <span class='req'>*</span>">Email <span class="req">*</span></label>
+            <input class="form-input" id="f-email" name="email" type="email" required autocomplete="email">
+          </div>
+          <div>
+            <label class="form-label" for="f-phone" data-da="Telefon" data-en="Phone">Telefon</label>
+            <input class="form-input" id="f-phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+        </div>
+        <div class="form-row split">
+          <div>
+            <label class="form-label" for="f-company" data-da="Firma <span class='req'>*</span>" data-en="Company <span class='req'>*</span>">Firma <span class="req">*</span></label>
+            <input class="form-input" id="f-company" name="company" type="text" required autocomplete="organization">
+          </div>
+          <div>
+            <label class="form-label" for="f-cvr" data-da="CVR" data-en="VAT / Org. no.">CVR</label>
+            <input class="form-input" id="f-cvr" name="cvr" type="text" inputmode="numeric" pattern="[0-9 ]*">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="f-licenses" data-da="Antal licenser <span class='req'>*</span>" data-en="Number of licenses <span class='req'>*</span>">Antal licenser <span class="req">*</span></label>
+          <select class="form-select" id="f-licenses" name="licenses" required>
+            <option value="1" data-da="1 licens" data-en="1 license">1 licens</option>
+            <option value="2-5" data-da="2-5 licenser" data-en="2-5 licenses">2-5 licenser</option>
+            <option value="6-10" data-da="6-10 licenser" data-en="6-10 licenses">6-10 licenser</option>
+            <option value="11-25" data-da="11-25 licenser" data-en="11-25 licenses">11-25 licenser</option>
+            <option value="26+" data-da="26+ licenser (volumenrabat)" data-en="26+ licenses (volume discount)">26+ licenser (volumenrabat)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="f-message" data-da="Besked (valgfrit)" data-en="Message (optional)">Besked (valgfrit)</label>
+          <textarea class="form-textarea" id="f-message" name="message" placeholder="" data-da-placeholder="Spørgsmål, særlige ønsker, faktureringsadresse osv." data-en-placeholder="Questions, special requests, billing address, etc."></textarea>
+        </div>
+
+        <button class="form-submit" id="buy-submit" type="submit">
+          <span id="buy-submit-text" data-da="Send bestilling →" data-en="Send order →">Send bestilling →</span>
+        </button>
+        <div class="form-status" id="buy-status"></div>
+        <div class="form-footer" data-da="Vi svarer inden for 24 timer · Ingen automatisk debitering" data-en="We reply within 24 hours · No automatic charge">Vi svarer inden for 24 timer · Ingen automatisk debitering</div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <footer>
   <a href="#top" class="footer-logo"><div class="logo-mark" style="width:18px;height:18px"></div>desklog.app</a>
@@ -755,6 +863,8 @@ function setLang(l) {
   document.title = l === 'da'
     ? 'Desklog — Automatisk tidsregistrering til Windows'
     : 'Desklog — Automatic time tracking for Windows';
+  // Update form placeholders if helper exists
+  if (typeof updatePlaceholders === 'function') updatePlaceholders();
   try { localStorage.setItem('dl-lang', l); } catch(e) {}
 }
 (function() {
@@ -779,6 +889,125 @@ const obs = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ─────────────────────────────────────────────────────────────
+// BUY LICENSE MODAL + WEB3FORMS HANDLER
+// Sends to support@desklog.app via Web3Forms — fallback to mailto on failure
+// ─────────────────────────────────────────────────────────────
+function openBuyModal() {
+  const modal = document.getElementById('buy-modal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Focus first input shortly after open animation
+  setTimeout(() => { document.getElementById('f-name').focus(); }, 300);
+}
+function closeBuyModal() {
+  const modal = document.getElementById('buy-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Close on backdrop click
+document.getElementById('buy-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'buy-modal') closeBuyModal();
+});
+// Close on ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('buy-modal').classList.contains('open')) closeBuyModal();
+});
+
+// Form submission
+document.getElementById('buy-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('buy-submit');
+  const btnText = document.getElementById('buy-submit-text');
+  const status = document.getElementById('buy-status');
+
+  // Honeypot — silently drop if filled
+  if (form.botcheck.checked) return;
+
+  // Reset status
+  status.classList.remove('show', 'success', 'error');
+
+  // Native HTML5 validation
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  // Disable button and show spinner
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span> ' + (lang === 'da' ? 'Sender …' : 'Sending …');
+
+  // Build payload
+  const data = new FormData(form);
+  // Add language for support context
+  data.append('language', lang === 'da' ? 'Dansk' : 'English');
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: data
+    });
+    const json = await res.json();
+
+    if (json.success) {
+      status.classList.add('show', 'success');
+      status.textContent = lang === 'da'
+        ? '✓ Tak! Vi har modtaget din bestilling og vender tilbage inden 24 timer.'
+        : '✓ Thank you! We received your order and will reply within 24 hours.';
+      form.reset();
+      btnText.textContent = lang === 'da' ? 'Sendt ✓' : 'Sent ✓';
+      // Auto-close after 4 seconds
+      setTimeout(() => {
+        closeBuyModal();
+        // Reset button state for next time
+        setTimeout(() => {
+          btn.disabled = false;
+          btnText.textContent = lang === 'da' ? 'Send bestilling →' : 'Send order →';
+          status.classList.remove('show', 'success', 'error');
+        }, 400);
+      }, 4000);
+    } else {
+      throw new Error(json.message || 'Server error');
+    }
+  } catch (err) {
+    // Fallback — mailto with the form data prefilled
+    const name = encodeURIComponent(form.name.value || '');
+    const email = encodeURIComponent(form.email.value || '');
+    const company = encodeURIComponent(form.company.value || '');
+    const cvr = encodeURIComponent(form.cvr.value || '');
+    const phone = encodeURIComponent(form.phone.value || '');
+    const licenses = encodeURIComponent(form.licenses.value || '');
+    const message = encodeURIComponent(form.message.value || '');
+    const body = encodeURIComponent(
+      (lang === 'da' ? 'Hej Desklog,\n\nJeg vil gerne købe en Pro-licens.\n\n' : 'Hi Desklog,\n\nI would like to buy a Pro license.\n\n') +
+      `Navn: ${form.name.value}\n` +
+      `Email: ${form.email.value}\n` +
+      `Telefon: ${form.phone.value}\n` +
+      `Firma: ${form.company.value}\n` +
+      `CVR: ${form.cvr.value}\n` +
+      `Antal licenser: ${form.licenses.value}\n\n` +
+      `Besked:\n${form.message.value}\n`
+    );
+    const mailtoUrl = `mailto:support@desklog.app?subject=Køb%20Desklog%20Pro-licens&body=${body}`;
+
+    status.classList.add('show', 'error');
+    status.innerHTML = lang === 'da'
+      ? `Kunne ikke sende automatisk. <a href="${mailtoUrl}">Klik her for at sende via din email →</a>`
+      : `Could not send automatically. <a href="${mailtoUrl}">Click here to send via your email →</a>`;
+    btn.disabled = false;
+    btnText.textContent = lang === 'da' ? 'Prøv igen →' : 'Try again →';
+  }
+});
+
+// Localize textarea placeholder when language changes
+function updatePlaceholders() {
+  document.querySelectorAll('[data-da-placeholder]').forEach(el => {
+    el.placeholder = el.getAttribute(lang === 'da' ? 'data-da-placeholder' : 'data-en-placeholder') || '';
+  });
+}
 
 // ─────────────────────────────────────────────────────────────
 // LIVE CLOCK
